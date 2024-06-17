@@ -1,12 +1,12 @@
 import 'dart:math';
 
 import 'package:ada_lovelace/src/domain/models/note.dart';
-import 'package:ada_lovelace/src/presentation/screens/notification_list_page/notification_list_page_bloc/notification_list_page_bloc.dart';
+import 'package:ada_lovelace/src/presentation/screens/notes_list_page/notes_list_page_bloc/notes_list_page_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class NotificationsListPageScreen extends StatelessWidget {
-  const NotificationsListPageScreen({super.key});
+class NotesListPageScreen extends StatelessWidget {
+  const NotesListPageScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +25,10 @@ class __ContentState extends State<_Content> {
   @override
   Widget build(BuildContext context) {
     final notificationListPageBloc = context.read<NotificationListPageBloc>();
-    print(notificationListPageBloc.state.notesList);
     return BlocBuilder<NotificationListPageBloc, NotificationListPageState>(
         builder: (context, state) {
       List<Note> notesList =
           List.from(notificationListPageBloc.state.notesList);
-      print(notesList);
       if (!notificationListPageBloc.state.showDone) {
         notesList.removeWhere((element) => element.isDone);
       }
@@ -105,10 +103,7 @@ class __ContentState extends State<_Content> {
                                     borderRadius: index == 0
                                         ? const BorderRadius.only(
                                             topLeft: Radius.circular(10))
-                                        : index ==
-                                                notificationListPageBloc.state
-                                                        .notesList.length -
-                                                    1
+                                        : index == notesList.length - 1
                                             ? const BorderRadius.only(
                                                 bottomLeft: Radius.circular(10))
                                             : null),
@@ -131,10 +126,7 @@ class __ContentState extends State<_Content> {
                                     borderRadius: index == 0
                                         ? const BorderRadius.only(
                                             topRight: Radius.circular(10))
-                                        : index ==
-                                                notificationListPageBloc.state
-                                                        .notesList.length -
-                                                    1
+                                        : index == notesList.length - 1
                                             ? const BorderRadius.only(
                                                 bottomRight:
                                                     Radius.circular(10))
@@ -156,29 +148,24 @@ class __ContentState extends State<_Content> {
                               onDismissed: (direction) {},
                               confirmDismiss: (direction) async {
                                 if (direction == DismissDirection.startToEnd) {
-                                  Note editedNote = notificationListPageBloc
-                                      .state.notesList[index];
+                                  Note editedNote = notesList[index];
                                   editedNote.isDone = !editedNote.isDone;
                                   notificationListPageBloc
                                       .add(EditNote(editedNote));
                                   return false;
                                 }
-                                notificationListPageBloc.add(DeleteNote(
-                                    notificationListPageBloc
-                                        .state.notesList[index]));
-                                return true;
+                                notificationListPageBloc
+                                    .add(DeleteNote(notesList[index]));
+                                return false;
                               },
                               child: ListTile(
                                 title: Row(
                                   children: [
                                     Checkbox(
                                         activeColor: Colors.green,
-                                        value: notificationListPageBloc
-                                            .state.notesList[index].isDone,
+                                        value: notesList[index].isDone,
                                         onChanged: (value) {
-                                          Note editedNote =
-                                              notificationListPageBloc
-                                                  .state.notesList[index];
+                                          Note editedNote = notesList[index];
                                           editedNote.isDone = value ?? false;
                                           notificationListPageBloc
                                               .add(EditNote(editedNote));
@@ -191,12 +178,8 @@ class __ContentState extends State<_Content> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            notificationListPageBloc
-                                                .state.notesList[index].title,
-                                            style: notificationListPageBloc
-                                                    .state
-                                                    .notesList[index]
-                                                    .isDone
+                                            notesList[index].title,
+                                            style: notesList[index].isDone
                                                 ? const TextStyle(
                                                     color: Colors.grey,
                                                     decoration: TextDecoration
