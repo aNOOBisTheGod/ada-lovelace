@@ -1,14 +1,14 @@
 part of 'notes_list_page_bloc.dart';
 
-enum NotificationListPageStatus { loading, done, error }
+enum NoteListPageStatus { loading, done, error }
 
-class NotificationListPageState {
+class NoteListPageState {
   final List<Note> notesList;
-  final NotificationListPageStatus status;
+  final NoteListPageStatus status;
   final bool showDone;
 
-  NotificationListPageState(
+  NoteListPageState(
       {this.notesList = const [],
-      this.status = NotificationListPageStatus.loading,
+      this.status = NoteListPageStatus.loading,
       this.showDone = false});
 }
