@@ -23,13 +23,15 @@ class AdaLovelaceApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
         providers: [
-          BlocProvider<NotificationListPageBloc>(
-            create: (context) => NotificationListPageBloc(),
+          BlocProvider<NoteListPageBloc>(
+            create: (context) => NoteListPageBloc(),
           ),
         ],
         child: MaterialApp.router(
           routerConfig: router,
           theme: ThemeData(
+              appBarTheme:
+                  const AppBarTheme(backgroundColor: Color(0xfff7f6f4)),
               scaffoldBackgroundColor: const Color(0xfff7f6f3),
               textTheme: TextTheme(
                   titleMedium: GoogleFonts.roboto(
