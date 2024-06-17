@@ -1,4 +1,4 @@
-part of 'notification_list_page_bloc.dart';
+part of 'notes_list_page_bloc.dart';
 
 sealed class NotificationListPageEvent {
   const NotificationListPageEvent();
