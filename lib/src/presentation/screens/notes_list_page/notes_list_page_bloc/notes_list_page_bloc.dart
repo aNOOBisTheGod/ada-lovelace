@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../domain/models/note.dart';
 
-part 'notification_list_page_event.dart';
-part 'notification_list_page_state.dart';
+part 'notes_list_page_event.dart';
+part 'notes_list_page_state.dart';
 
 class NotificationListPageBloc
     extends Bloc<NotificationListPageEvent, NotificationListPageState> {
