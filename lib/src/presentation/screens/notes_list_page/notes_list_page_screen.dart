@@ -3,10 +3,13 @@ import 'dart:math';
 import 'package:ada_lovelace/src/domain/models/note.dart';
 import 'package:ada_lovelace/src/presentation/screens/notes_list_page/notes_list_page_bloc/notes_list_page_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
-import '../../navigation/router.dart';
+import '../../../../core/navigation/router.dart';
 
 class NotesListPageScreen extends StatelessWidget {
   const NotesListPageScreen({super.key});
@@ -17,14 +20,20 @@ class NotesListPageScreen extends StatelessWidget {
   }
 }
 
-class _Content extends StatefulWidget {
+class _Content extends StatelessWidget {
   const _Content({super.key});
 
-  @override
-  State<_Content> createState() => __ContentState();
-}
+  SliverPersistentHeader makeHeader(String headerTitle) {
+    return SliverPersistentHeader(
+      floating: true,
+      pinned: true,
+      delegate: _SliverAppBarDelegate(
+        minHeight: 150.0,
+        maxHeight: 250.0,
+      ),
+    );
+  }
 
-class __ContentState extends State<_Content> {
   @override
   Widget build(BuildContext context) {
     final noteListPageBloc = context.read<NoteListPageBloc>();
@@ -38,42 +47,17 @@ class __ContentState extends State<_Content> {
       return Scaffold(
         body: CustomScrollView(
           slivers: [
-            SliverAppBar.medium(
-              centerTitle: false,
-              titleTextStyle: Theme.of(context).textTheme.titleLarge,
-              actions: [
-                IconButton(
-                    onPressed: () {
-                      noteListPageBloc.add(ChangeShowDoneStatus());
-                    },
-                    icon: Icon(
-                      noteListPageBloc.state.showDone
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      color: Colors.blue,
-                    ))
-              ],
-              title: const Text(
-                "Мои дела",
-              ),
-            ),
+            makeHeader("Мои заметки"),
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        "Выполнено - ${noteListPageBloc.state.notesList.where((element) => element.isDone).length}",
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                    ),
                     Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: Colors.white,
+                          color: Theme.of(context).cardColor,
                           boxShadow: const [
                             BoxShadow(color: Colors.grey, blurRadius: 3)
                           ]),
@@ -158,11 +142,35 @@ class __ContentState extends State<_Content> {
                                     return false;
                                   },
                                   child: ListTile(
+                                    onTap: () {
+                                      context.push('/add_note',
+                                          extra: notesList[index]);
+                                    },
                                     title: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Checkbox(
                                             activeColor: Colors.green,
                                             value: notesList[index].isDone,
+                                            fillColor: notesList[index]
+                                                            .status ==
+                                                        NoteStatus.important &&
+                                                    !notesList[index].isDone
+                                                ? MaterialStatePropertyAll(
+                                                    Colors.red.withOpacity(.3))
+                                                : null,
+                                            side: notesList[index].status ==
+                                                        NoteStatus.important &&
+                                                    !notesList[index].isDone
+                                                ? MaterialStateBorderSide
+                                                    .resolveWith(
+                                                    (states) =>
+                                                        const BorderSide(
+                                                            width: 1.0,
+                                                            color: Colors.red),
+                                                  )
+                                                : null,
                                             onChanged: (value) {
                                               Note editedNote =
                                                   notesList[index];
@@ -177,22 +185,94 @@ class __ContentState extends State<_Content> {
                                                   .width *
                                               .7,
                                           child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text(
-                                                notesList[index].title,
-                                                style: notesList[index].isDone
-                                                    ? const TextStyle(
-                                                        color: Colors.grey,
-                                                        decoration:
-                                                            TextDecoration
-                                                                .lineThrough)
-                                                    : null,
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 10.0),
+                                                    child: Row(
+                                                      children: [
+                                                        switch (notesList[index]
+                                                            .status) {
+                                                          NoteStatus
+                                                                .important =>
+                                                            const Icon(
+                                                              Icons
+                                                                  .warning_outlined,
+                                                              color: Colors.red,
+                                                            ),
+                                                          NoteStatus
+                                                                .notImportant =>
+                                                            const Icon(
+                                                              Icons
+                                                                  .arrow_downward,
+                                                              color:
+                                                                  Colors.grey,
+                                                            ),
+                                                          NoteStatus.basic =>
+                                                            Container()
+                                                        },
+                                                        SizedBox(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              .55,
+                                                          child: Text(
+                                                            notesList[index]
+                                                                .title,
+                                                            style: notesList[
+                                                                        index]
+                                                                    .isDone
+                                                                ? const TextStyle(
+                                                                    color: Colors
+                                                                        .grey,
+                                                                    decoration:
+                                                                        TextDecoration
+                                                                            .lineThrough)
+                                                                : notesList[index]
+                                                                            .status ==
+                                                                        NoteStatus
+                                                                            .important
+                                                                    ? const TextStyle(
+                                                                        color: Colors
+                                                                            .red)
+                                                                    : null,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  notesList[index].date != null
+                                                      ? Text(
+                                                          DateFormat(
+                                                                  'dd.MM.yyyy')
+                                                              .format(notesList[
+                                                                      index]
+                                                                  .date!),
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodySmall,
+                                                        )
+                                                      : Container()
+                                                ],
                                               ),
-                                              const Icon(
-                                                Icons.info_outline,
-                                                color: Colors.grey,
+                                              const Padding(
+                                                padding:
+                                                    EdgeInsets.only(top: 8.0),
+                                                child: Icon(
+                                                  Icons.info_outline,
+                                                  color: Colors.grey,
+                                                ),
                                               )
                                             ],
                                           ),
@@ -217,10 +297,9 @@ class __ContentState extends State<_Content> {
           backgroundColor: Colors.blue,
           onPressed: () {
             router.push('/add_note');
-            // NoteListPageBloc.add(AddNote(Note(
+            // noteListPageBloc.add(AddNote(Note(
             //     id: Random().nextInt(pow(2, 32).round()),
             //     title: Random().nextInt(pow(2, 32).round()).toString(),
-            //     description: '345',
             //     isDone: false,
             //     status: NoteStatus.basic)));
           },
@@ -232,5 +311,103 @@ class __ContentState extends State<_Content> {
         ),
       );
     });
+  }
+}
+
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverAppBarDelegate({
+    required this.minHeight,
+    required this.maxHeight,
+  });
+  final double minHeight;
+  final double maxHeight;
+
+  @override
+  double get minExtent => minHeight;
+  @override
+  double get maxExtent => max(maxHeight, minHeight);
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    final noteListPageBloc = context.read<NoteListPageBloc>();
+
+    return BlocBuilder<NoteListPageBloc, NoteListPageState>(
+        builder: (context, state) {
+      return SizedBox.expand(
+          child: shrinkOffset > maxHeight / 2
+              ? Container(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Мои заметки",
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  noteListPageBloc.add(ChangeShowDoneStatus());
+                                },
+                                icon: Icon(
+                                  noteListPageBloc.state.showDone
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.blue,
+                                ))
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              : Container(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          "Мои заметки",
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Выполнено - ${noteListPageBloc.state.notesList.where((element) => element.isDone).length}",
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  noteListPageBloc.add(ChangeShowDoneStatus());
+                                },
+                                icon: Icon(
+                                  noteListPageBloc.state.showDone
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.blue,
+                                ))
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ));
+    });
+  }
+
+  @override
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
+    return maxHeight != oldDelegate.maxHeight ||
+        minHeight != oldDelegate.minHeight;
   }
 }
