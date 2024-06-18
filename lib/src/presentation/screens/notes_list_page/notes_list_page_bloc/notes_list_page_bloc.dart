@@ -1,3 +1,4 @@
+import 'package:ada_lovelace/core/logger/note_event_logger.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../domain/models/note.dart';
 
@@ -17,11 +18,14 @@ class NoteListPageBloc extends Bloc<NoteListPageEvent, NoteListPageState> {
     tmp.add(event.note);
     emit(NoteListPageState(
         notesList: tmp, status: state.status, showDone: state.showDone));
+    NoteEventLogger().noteAdded(event.note);
   }
 
   void _editNote(EditNote event, Emitter<NoteListPageState> emit) {
     List<Note> tmp = List.from(state.notesList);
-    tmp[tmp.indexWhere((element) => element.id == event.note.id)] = event.note;
+    int noteIndex = tmp.indexWhere((element) => element.id == event.note.id);
+    NoteEventLogger().noteEdited(tmp[noteIndex], event.note);
+    tmp[noteIndex] = event.note;
     emit(NoteListPageState(
         notesList: tmp, status: state.status, showDone: state.showDone));
   }
@@ -31,10 +35,13 @@ class NoteListPageBloc extends Bloc<NoteListPageEvent, NoteListPageState> {
     tmp.removeWhere((element) => element.id == event.note.id);
     emit(NoteListPageState(
         notesList: tmp, status: state.status, showDone: state.showDone));
+    NoteEventLogger().noteDeleted(event.note);
   }
 
   void _editShowDone(
       ChangeShowDoneStatus event, Emitter<NoteListPageState> emit) {
+    NoteEventLogger().noteDoneStatusChange(!state.showDone);
+
     emit(NoteListPageState(
         notesList: state.notesList,
         status: state.status,
