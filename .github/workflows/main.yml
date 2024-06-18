@@ -1,9 +1,5 @@
 on:
-  pull_request:
-    branches:
-      - main
-      - development
-  push:
+  merge:
     branches:
       - main
       - development
@@ -19,7 +15,7 @@ jobs:
           java-version: '12.x'
       - uses: subosito/flutter-action@v1
         with:
-          flutter-version: '3.13.0'
+          flutter-version: '3.18.0'
       - run: flutter pub get
       - run: flutter build apk --release
       - name: Push to Releases
