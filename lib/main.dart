@@ -68,7 +68,6 @@ class AdaLovelaceApp extends StatelessWidget {
                         const TextStyle(fontSize: 32, color: Colors.white))),
           ),
           routerConfig: router,
-          themeMode: ThemeMode.dark,
           theme: ThemeData(
               inputDecorationTheme: InputDecorationTheme(
                   border: OutlineInputBorder(
