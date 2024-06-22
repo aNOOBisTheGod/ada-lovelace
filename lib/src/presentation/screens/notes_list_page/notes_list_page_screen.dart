@@ -199,6 +199,9 @@ class _Content extends StatelessWidget {
                                                         const EdgeInsets.only(
                                                             top: 10.0),
                                                     child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
                                                       children: [
                                                         switch (notesList[index]
                                                             .status) {
