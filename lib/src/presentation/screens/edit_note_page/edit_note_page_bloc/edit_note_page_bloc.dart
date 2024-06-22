@@ -1,4 +1,4 @@
-import 'package:ada_lovelace/src/domain/models/note.dart';
+import 'package:simplenotes/src/domain/models/note.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'edit_note_page_event.dart';

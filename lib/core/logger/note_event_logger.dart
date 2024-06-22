@@ -1,4 +1,4 @@
-import 'package:ada_lovelace/src/domain/models/note.dart';
+import 'package:simplenotes/src/domain/models/note.dart';
 import 'package:logger/web.dart';
 
 class NoteEventLogger {

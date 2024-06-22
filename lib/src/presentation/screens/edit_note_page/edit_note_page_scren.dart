@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:ada_lovelace/src/presentation/screens/edit_note_page/edit_note_page_bloc/edit_note_page_bloc.dart';
-import 'package:ada_lovelace/src/presentation/screens/notes_list_page/notes_list_page_bloc/notes_list_page_bloc.dart';
+import 'package:simplenotes/src/presentation/screens/edit_note_page/edit_note_page_bloc/edit_note_page_bloc.dart';
+import 'package:simplenotes/src/presentation/screens/notes_list_page/notes_list_page_bloc/notes_list_page_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';

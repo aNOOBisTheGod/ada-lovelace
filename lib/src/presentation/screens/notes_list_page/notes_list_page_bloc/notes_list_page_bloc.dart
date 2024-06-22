@@ -1,4 +1,4 @@
-import 'package:ada_lovelace/core/logger/note_event_logger.dart';
+import 'package:simplenotes/core/logger/note_event_logger.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../domain/models/note.dart';
 

@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:ada_lovelace/src/domain/models/note.dart';
-import 'package:ada_lovelace/src/presentation/screens/notes_list_page/notes_list_page_bloc/notes_list_page_bloc.dart';
+import 'package:simplenotes/src/domain/models/note.dart';
+import 'package:simplenotes/src/presentation/screens/notes_list_page/notes_list_page_bloc/notes_list_page_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
