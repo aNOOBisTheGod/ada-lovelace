@@ -10,6 +10,9 @@
 <li>Добавление новых заметок
 <li>Изменение заметок
 </ul>
+<img src="assets/github/screenshots/list.png" width="200">
+<img src="assets/github/screenshots/add_note.png" width="200">
+<img src="assets/github/screenshots/show_done.png" width="200">
 
 ## Как использовать
 
