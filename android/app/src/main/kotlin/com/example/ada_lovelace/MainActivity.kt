@@ -1,4 +1,4 @@
-package com.example.ada_lovelace
+package xyz.anoobis.simplenotes
 
 import io.flutter.embedding.android.FlutterActivity
 
