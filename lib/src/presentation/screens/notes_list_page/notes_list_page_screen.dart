@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/navigation/router.dart';
+import 'widgets/appbar_delegate.dart';
 
 class NotesListPageScreen extends StatelessWidget {
   const NotesListPageScreen({super.key});
@@ -27,7 +28,7 @@ class _Content extends StatelessWidget {
     return SliverPersistentHeader(
       floating: true,
       pinned: true,
-      delegate: _SliverAppBarDelegate(
+      delegate: SliverAppBarDelegate(
         minHeight: 100.0,
         maxHeight: 200.0,
       ),
@@ -367,81 +368,4 @@ class _Content extends StatelessWidget {
       );
     });
   }
-}
-
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  final double maxHeight;
-  final double minHeight;
-
-  _SliverAppBarDelegate({
-    required this.maxHeight,
-    required this.minHeight,
-  });
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    final collapsePercent = shrinkOffset / maxHeight;
-
-    final noteListPageBloc = context.read<NoteListPageBloc>();
-
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
-      ),
-      child: Stack(
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Text('Мои дела',
-                    style: Theme.of(context).textTheme.titleLarge),
-              ),
-              SizedBox(height: 6 - 6 * collapsePercent),
-              AnimatedContainer(
-                duration: Duration.zero,
-                height: Theme.of(context).textTheme.titleSmall!.fontSize! *
-                    (1 - collapsePercent) *
-                    1.25,
-                child: Opacity(
-                  opacity: 1 - collapsePercent,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Text(
-                      'Выполнено - ${noteListPageBloc.state.notesList.where((element) => element.isDone).length}',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Align(
-              alignment: Alignment.bottomRight,
-              child: IconButton(
-                  onPressed: () {
-                    noteListPageBloc.add(ChangeShowDoneStatus());
-                  },
-                  icon: Icon(
-                    noteListPageBloc.state.showDone
-                        ? Icons.visibility
-                        : Icons.visibility_off,
-                    color: Colors.blue,
-                  ))),
-        ],
-      ),
-    );
-  }
-
-  @override
-  double get maxExtent => maxHeight;
-
-  @override
-  double get minExtent => minHeight;
-
-  @override
-  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
 }
