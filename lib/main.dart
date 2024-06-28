@@ -1,103 +1,54 @@
 import 'dart:io';
 
 import 'package:simplenotes/core/navigation/router.dart';
+import 'package:simplenotes/core/themes/dark_theme.dart';
+import 'package:simplenotes/core/themes/light_theme.dart';
+import 'package:simplenotes/core/utils/http_overrides.dart';
+import 'package:simplenotes/src/domain/usecase/notes/add_note_data.dart';
+import 'package:simplenotes/src/domain/usecase/notes/delete_note_data.dart';
+import 'package:simplenotes/src/domain/usecase/notes/edit_note_data.dart';
+import 'package:simplenotes/src/domain/usecase/notes/get_notes_list.dart';
 import 'package:simplenotes/src/presentation/screens/edit_note_page/edit_note_page_bloc/edit_note_page_bloc.dart';
 import 'package:simplenotes/src/presentation/screens/notes_list_page/notes_list_page_bloc/notes_list_page_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Directory dir = await getApplicationDocumentsDirectory();
+  HttpOverrides.global = MyHttpOverrides();
 
   Hive.init(dir.path);
-  runApp(const AdaLovelaceApp());
+  await Hive.openBox('notesList');
+  await Hive.openBox('X-Last-Known-Revision');
+  runApp(AdaLovelaceApp());
 }
 
 class AdaLovelaceApp extends StatelessWidget {
-  const AdaLovelaceApp({super.key});
+  AdaLovelaceApp({super.key});
+  final GetNotesList _getNotesList = GetNotesList();
+  final DeleteNoteData _deleteNoteData = DeleteNoteData();
+  final EditNoteData _editNoteData = EditNoteData();
+  final AddNoteData _addNoteData = AddNoteData();
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
         providers: [
           BlocProvider<NoteListPageBloc>(
-            create: (context) => NoteListPageBloc(),
+            create: (context) => NoteListPageBloc(
+                getNotesList: _getNotesList,
+                deleteNoteData: _deleteNoteData,
+                editNoteData: _editNoteData,
+                addNoteData: _addNoteData),
           ),
           BlocProvider<EditNotePageBloc>(
             create: (context) => EditNotePageBloc(),
           ),
         ],
         child: MaterialApp.router(
-          darkTheme: ThemeData(
-            primaryColor: Colors.black,
-            brightness: Brightness.dark,
-            cardColor: const Color(0xff3C3C3F),
-            colorScheme: ColorScheme.fromSeed(
-                seedColor: Colors.blue, brightness: Brightness.dark),
-            inputDecorationTheme: InputDecorationTheme(
-                labelStyle: const TextStyle(color: Colors.white),
-                border: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.white),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.white),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                filled: true,
-                fillColor: const Color(0xff3C3C3F)),
-            textTheme: TextTheme(
-                bodyMedium: GoogleFonts.roboto(
-                    textStyle: const TextStyle(fontSize: 16)),
-                bodySmall: GoogleFonts.roboto(
-                    textStyle: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400)),
-                titleMedium: GoogleFonts.roboto(
-                    textStyle: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400)),
-                titleLarge: GoogleFonts.roboto(
-                    textStyle:
-                        const TextStyle(fontSize: 32, color: Colors.white))),
-          ),
-          routerConfig: router,
-          theme: ThemeData(
-              inputDecorationTheme: InputDecorationTheme(
-                  border: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  filled: true,
-                  fillColor: Colors.white),
-              cardColor: Colors.white,
-              primaryColor: const Color(0xffF7F6F2),
-              appBarTheme:
-                  const AppBarTheme(backgroundColor: Color(0xfff7f6f4)),
-              scaffoldBackgroundColor: const Color(0xfff7f6f3),
-              textTheme: TextTheme(
-                  bodySmall: GoogleFonts.roboto(
-                      textStyle: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400)),
-                  titleMedium: GoogleFonts.roboto(
-                      textStyle: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400)),
-                  titleLarge: GoogleFonts.roboto(
-                      textStyle: const TextStyle(fontSize: 32)))),
-        ));
+            darkTheme: darkTheme, routerConfig: router, theme: lightTheme));
   }
 }

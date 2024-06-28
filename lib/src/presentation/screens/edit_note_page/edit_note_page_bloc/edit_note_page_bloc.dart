@@ -23,7 +23,7 @@ class EditNotePageBloc extends Bloc<EditNotePageEvent, EditNotePageState> {
 
   void _setNoteToEdit(SetNoteToEdit event, Emitter<EditNotePageState> emit) {
     emit(EditNotePageState(
-        noteDate: event.note.date, noteStatus: event.note.status));
+        noteDate: event.note.deadline, noteStatus: event.note.status));
   }
 
   void _resetEditPageState(_, Emitter<EditNotePageState> emit) {

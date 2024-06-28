@@ -22,3 +22,7 @@ class DeleteNote extends NoteListPageEvent {
 class ChangeShowDoneStatus extends NoteListPageEvent {
   ChangeShowDoneStatus();
 }
+
+class LoadNotes extends NoteListPageEvent {
+  LoadNotes();
+}

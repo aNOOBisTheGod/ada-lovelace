@@ -8,7 +8,7 @@ class ChangeNoteStatus extends EditNotePageEvent {
 }
 
 class ChangeNoteDate extends EditNotePageEvent {
-  final DateTime date;
+  final DateTime? date;
   ChangeNoteDate(this.date);
 }
 
