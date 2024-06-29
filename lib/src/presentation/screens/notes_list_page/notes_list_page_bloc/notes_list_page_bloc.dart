@@ -38,11 +38,12 @@ class NoteListPageBloc extends Bloc<NoteListPageEvent, NoteListPageState> {
           notesList: list,
           status: NoteListPageStatus.done,
           showDone: state.showDone));
-    } catch (_) {
+    } catch (e) {
       emit(NoteListPageState(
           notesList: state.notesList,
           status: NoteListPageStatus.error,
           showDone: state.showDone));
+      rethrow;
     }
   }
 

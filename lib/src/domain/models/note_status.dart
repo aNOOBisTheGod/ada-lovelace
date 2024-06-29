@@ -8,7 +8,7 @@ enum NoteStatus {
   String get statusName {
     switch (this) {
       case NoteStatus.high:
-        return 'high';
+        return 'important';
       case NoteStatus.low:
         return 'low';
       case NoteStatus.basic:
@@ -18,7 +18,7 @@ enum NoteStatus {
 
   factory NoteStatus.fromName(String name) {
     switch (name) {
-      case 'high':
+      case 'important':
         return NoteStatus.high;
       case 'low':
         return NoteStatus.low;

@@ -29,7 +29,7 @@ class Note {
         'text': text,
         'importance': status.statusName,
         'done': isDone,
-        'deadline': deadline,
+        'deadline': deadline?.millisecondsSinceEpoch,
         'color': color,
         'created_at': createdAt,
         'changed_at': changedAt,
@@ -41,7 +41,9 @@ class Note {
       text: jsonData['text'],
       status: NoteStatus.fromName(jsonData['importance']),
       isDone: jsonData['done'],
-      deadline: jsonData['deadline'],
+      deadline: jsonData['deadline'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(jsonData['deadline'])
+          : null,
       color: jsonData['color'],
       createdAt: jsonData['created_at'],
       changedAt: jsonData['changed_at'],

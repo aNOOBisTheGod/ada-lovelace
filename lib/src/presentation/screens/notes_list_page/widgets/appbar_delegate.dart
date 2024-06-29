@@ -35,23 +35,17 @@ class SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
                 child: Text(AppLocalizations.of(context)!.notesListPageTitle,
                     style: Theme.of(context).textTheme.titleLarge),
               ),
-              SizedBox(height: 6 - 6 * collapsePercent),
               AnimatedContainer(
+                height: 20 * (1 - collapsePercent),
                 duration: Duration.zero,
-                height: Theme.of(context).textTheme.titleSmall!.fontSize! *
-                    (1 - collapsePercent) *
-                    1.25,
-                child: Opacity(
-                  opacity: 1 - collapsePercent,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Text(
-                      AppLocalizations.of(context)!.completedNotesCountText(
-                          noteListPageBloc.state.notesList
-                              .where((element) => element.isDone)
-                              .length),
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text(
+                    AppLocalizations.of(context)!.completedNotesCountText(
+                        noteListPageBloc.state.notesList
+                            .where((element) => element.isDone)
+                            .length),
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
               ),

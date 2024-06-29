@@ -5,10 +5,10 @@ import 'package:simplenotes/src/domain/models/note.dart';
 import 'package:simplenotes/src/domain/repository/note_repository.dart';
 
 class NoteRepositoryImpl implements NoteRepository {
-  void updateRemoteNotesList() {
+  Future<void> updateRemoteNotesList() async {
     final box = Hive.box('revision');
     if ((box.get('remote') ?? 0) < (box.get('local') ?? 0)) {
-      NotesApi().patchNotesList(NotesLocalStorage().loadNotes());
+      await NotesApi().patchNotesList(NotesLocalStorage().loadNotes());
     }
   }
 
