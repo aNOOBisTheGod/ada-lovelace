@@ -1,0 +1,40 @@
+name: Build Android Release
+
+on:
+  push:
+    branches: 
+      _ "alan_turing"
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+env:
+  APP_TOKEN : ${{ secrets.APP_TOKEN }}
+jobs:
+  build:
+    permissions:
+      checks: write
+      pull-requests: write
+    runs-on: macos-latest
+    steps:
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '12.x'
+      - name: Clone repository
+        uses: actions/checkout@v4
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.19.0
+      - run: |
+          mkdir lib/core/secrets/
+          touch lib/core/secrets/auth_token.dart
+          echo $APP_TOKEN >> lib/core/secrets/auth_token.dart
+      - run: flutter pub get
+      - run: flutter build apk
+      - name: Push to Releases
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/app/outputs/apk/release/*"
+          tag: v0.1.${{ github.run_number }}
+          token: ${{ secrets.TOKEN }}

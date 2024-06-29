@@ -1,0 +1,15 @@
+{
+  "notesListPageTitle": "Мои дела",
+  "todoImportance_basic": "Нет",
+  "todoImportance_low": "Низкий",
+  "todoImportance_important": "!! Высокий",
+  "completedNotesCountText": "Выполнено — {count}",
+  "saveText": "Сохранить",
+  "whatShouldBeDoneText": "Что надо сделать...",
+  "importanceText": "Важность",
+  "deadlineText": "Сделать до",
+  "deleteButtonTitle": "Удалить",
+  "createNew": "Новая заметка...",
+  "simpleError": "Что-то пошло не так...",
+  "someDay": "Когда-нибудь"
+}
