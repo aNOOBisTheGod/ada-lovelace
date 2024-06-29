@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:simplenotes/l10n/generated/app_localizations.dart';
 
 import '../notes_list_page_bloc/notes_list_page_bloc.dart';
 
@@ -31,7 +32,7 @@ class SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
-                child: Text('Мои дела',
+                child: Text(AppLocalizations.of(context)!.notesListPageTitle,
                     style: Theme.of(context).textTheme.titleLarge),
               ),
               SizedBox(height: 6 - 6 * collapsePercent),
@@ -45,7 +46,10 @@ class SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 8.0),
                     child: Text(
-                      'Выполнено - ${noteListPageBloc.state.notesList.where((element) => element.isDone).length}',
+                      AppLocalizations.of(context)!.completedNotesCountText(
+                          noteListPageBloc.state.notesList
+                              .where((element) => element.isDone)
+                              .length),
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),

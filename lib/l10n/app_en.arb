@@ -1,0 +1,15 @@
+{
+  "notesListPageTitle": "My tasks",
+  "todoImportance_basic": "None",
+  "todoImportance_low": "Low",
+  "todoImportance_important": "!! High",
+  "completedNotesCountText": "Completed — {count}",
+  "saveText": "Save",
+  "whatShouldBeDoneText": "What should be done...",
+  "importanceText": "Importance",
+  "deadlineText": "Deadline",
+  "deleteButtonTitle": "Delete",
+  "createNew": "Create new...",
+  "simpleError": "Something went wrong...",
+  "someDay": "Some day"
+}

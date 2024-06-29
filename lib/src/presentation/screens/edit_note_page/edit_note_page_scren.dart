@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:simplenotes/core/utils/get_device_id.dart';
+import 'package:simplenotes/l10n/generated/app_localizations.dart';
 import 'package:simplenotes/src/presentation/screens/edit_note_page/edit_note_page_bloc/edit_note_page_bloc.dart';
 import 'package:simplenotes/src/presentation/screens/notes_list_page/notes_list_page_bloc/notes_list_page_bloc.dart';
 import 'package:flutter/material.dart';
@@ -66,8 +67,8 @@ class _Content extends StatelessWidget {
                   editNotePageBloc.add(ResetEditPageState());
                   context.pop();
                 },
-                child: const Text(
-                  'Сохранить',
+                child: Text(
+                  AppLocalizations.of(context)!.saveText,
                 ))
           ],
           leading: IconButton(
@@ -91,15 +92,16 @@ class _Content extends StatelessWidget {
                   child: TextField(
                     maxLines: null,
                     controller: _noteTitleController,
-                    decoration: const InputDecoration(
-                      hintText: 'Что надо сделать...',
+                    decoration: InputDecoration(
+                      hintText:
+                          AppLocalizations.of(context)!.whatShouldBeDoneText,
                     ),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 16.0),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
                   child: Text(
-                    'Важность',
+                    AppLocalizations.of(context)!.importanceText,
                   ),
                 ),
                 DropdownButton<NoteStatus>(
@@ -114,9 +116,12 @@ class _Content extends StatelessWidget {
                           value: noteStatus,
                           child: Text(
                             switch (noteStatus) {
-                              NoteStatus.basic => 'Нет',
-                              NoteStatus.high => '!! Высокий',
-                              NoteStatus.low => 'Низкий'
+                              NoteStatus.basic => AppLocalizations.of(context)!
+                                  .todoImportance_basic,
+                              NoteStatus.high => AppLocalizations.of(context)!
+                                  .todoImportance_important,
+                              NoteStatus.low =>
+                                AppLocalizations.of(context)!.todoImportance_low
                             },
                             style: noteStatus == NoteStatus.high
                                 ? const TextStyle(color: Colors.red)
@@ -152,7 +157,7 @@ class _Content extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 16.0),
                   child: Text(state.noteDate == null
-                      ? 'Когда-нибудь'
+                      ? AppLocalizations.of(context)!.someDay
                       : DateFormat('dd.MM.yyyy').format(state.noteDate!)),
                 ),
                 const Divider(),
@@ -173,12 +178,13 @@ class _Content extends StatelessWidget {
                               overlayColor: MaterialStatePropertyAll(
                                   Colors.red.withOpacity(.3)),
                             ),
-                            child: const Row(
+                            child: Row(
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.delete,
                                 ),
-                                Text('Удалить')
+                                Text(AppLocalizations.of(context)!
+                                    .deleteButtonTitle)
                               ],
                             )),
                       )

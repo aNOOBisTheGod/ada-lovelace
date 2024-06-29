@@ -3,6 +3,12 @@ import 'package:simplenotes/src/domain/models/note.dart';
 
 class NotesLocalStorage {
   final box = Hive.box('notesList');
+  final revisionBox = Hive.box('revision');
+
+  void incrementRevision() {
+    int revision = revisionBox.get('local') ?? 0;
+    revisionBox.put('local', revision + 1);
+  }
 
   List<Note> loadNotes() {
     return (box.get('list') ?? [])
@@ -18,12 +24,14 @@ class NotesLocalStorage {
     final notesList = (box.get('list') ?? []);
     notesList.add(note.toJson());
     box.put('list', notesList);
+    incrementRevision();
   }
 
   void deleteNote(Note note) {
     final notesList = (box.get('list') ?? []);
     notesList.removeWhere((element) => element['id'] == note.id);
     box.put('list', notesList);
+    incrementRevision();
   }
 
   void editNote(Note note) {
@@ -31,5 +39,6 @@ class NotesLocalStorage {
     notesList[(notesList as List).indexWhere((e) => e['id'] == note.id)] =
         note.toJson();
     box.put('list', notesList);
+    incrementRevision();
   }
 }

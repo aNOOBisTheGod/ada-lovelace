@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:simplenotes/core/navigation/router.dart';
 import 'package:simplenotes/core/themes/dark_theme.dart';
 import 'package:simplenotes/core/themes/light_theme.dart';
 import 'package:simplenotes/core/utils/http_overrides.dart';
+import 'package:simplenotes/l10n/generated/app_localizations.dart';
 import 'package:simplenotes/src/domain/usecase/notes/add_note_data.dart';
 import 'package:simplenotes/src/domain/usecase/notes/delete_note_data.dart';
 import 'package:simplenotes/src/domain/usecase/notes/edit_note_data.dart';
@@ -22,7 +24,7 @@ Future<void> main() async {
 
   Hive.init(dir.path);
   await Hive.openBox('notesList');
-  await Hive.openBox('X-Last-Known-Revision');
+  await Hive.openBox('revision');
   runApp(AdaLovelaceApp());
 }
 
@@ -48,7 +50,14 @@ class AdaLovelaceApp extends StatelessWidget {
             create: (context) => EditNotePageBloc(),
           ),
         ],
-        child: MaterialApp.router(
-            darkTheme: darkTheme, routerConfig: router, theme: lightTheme));
+        child: MaterialApp.router(localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ], supportedLocales: const [
+          Locale('en'),
+          Locale('ru'),
+        ], darkTheme: darkTheme, routerConfig: router, theme: lightTheme));
   }
 }

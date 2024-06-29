@@ -4,18 +4,23 @@ import 'package:simplenotes/src/domain/models/note.dart';
 import 'package:dio/dio.dart';
 
 class NotesApi {
-  Dio dio = Dio(BaseOptions(baseUrl: 'https://beta.mrdekk.ru/todo/'));
+  Dio dio = Dio(BaseOptions(baseUrl: 'https://hive.mrdekk.ru/todo/'));
   final String auth = 'Bearer ${AuthToken().token}';
-  final box = Hive.box('X-Last-Known-Revision');
+  final box = Hive.box('revision');
+
+  void updateRevision(Response response) {
+    box.put('remote', response.data['revision']);
+  }
 
   Future<List<Note>> loadNotes() async {
     final response = await dio.get('/list',
         options: Options(headers: {
           'Authorization': auth,
           'accept': 'application/json',
-          'X-Last-Known-Revision': box.get('value')
+          'X-Last-Known-Revision': box.get('remote')
         }));
-    box.put('value', response.data['revision']);
+    updateRevision(response);
+    box.put('local', response.data['revision']);
     return (response.data['list'] as List)
         .map((e) => Note.fromJson(e))
         .toList();
@@ -27,9 +32,9 @@ class NotesApi {
         options: Options(headers: {
           'Authorization': auth,
           'accept': 'application/json',
-          'X-Last-Known-Revision': box.get('value')
+          'X-Last-Known-Revision': box.get('remote')
         }));
-    box.put('value', response.data['revision']);
+    updateRevision(response);
   }
 
   Future<void> deleteNote(Note note) async {
@@ -37,9 +42,9 @@ class NotesApi {
         options: Options(headers: {
           'Authorization': auth,
           'accept': 'application/json',
-          'X-Last-Known-Revision': box.get('value')
+          'X-Last-Known-Revision': box.get('remote')
         }));
-    box.put('value', response.data['revision']);
+    updateRevision(response);
   }
 
   Future<void> editNote(Note note) async {
@@ -48,8 +53,18 @@ class NotesApi {
         options: Options(headers: {
           'Authorization': auth,
           'accept': 'application/json',
-          'X-Last-Known-Revision': box.get('value')
+          'X-Last-Known-Revision': box.get('remote')
         }));
-    box.put('value', response.data['revision']);
+    updateRevision(response);
+  }
+
+  Future<void> patchNotesList(List<Note> notes) async {
+    await dio.patch('/list',
+        data: {'list': notes.map((e) => e.toJson()).toList()},
+        options: Options(headers: {
+          'Authorization': auth,
+          'accept': 'application/json',
+          'X-Last-Known-Revision': box.get('remote')
+        }));
   }
 }
