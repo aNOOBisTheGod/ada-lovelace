@@ -25,11 +25,11 @@ Future<void> main() async {
   Hive.init(dir.path);
   await Hive.openBox('notesList');
   await Hive.openBox('revision');
-  runApp(AdaLovelaceApp());
+  runApp(SimpleNotesApp());
 }
 
-class AdaLovelaceApp extends StatelessWidget {
-  AdaLovelaceApp({super.key});
+class SimpleNotesApp extends StatelessWidget {
+  SimpleNotesApp({super.key});
   final GetNotesList _getNotesList = GetNotesList();
   final DeleteNoteData _deleteNoteData = DeleteNoteData();
   final EditNoteData _editNoteData = EditNoteData();

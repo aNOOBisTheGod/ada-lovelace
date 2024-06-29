@@ -1,4 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:simplenotes/core/logger/note_event_logger.dart';
 import 'package:simplenotes/core/secrets/auth_token.dart';
 import 'package:simplenotes/src/domain/models/note.dart';
 import 'package:dio/dio.dart';
@@ -10,6 +11,7 @@ class NotesApi {
 
   void updateRevision(Response response) {
     box.put('remote', response.data['revision']);
+    NoteEventLogger().remoteRevisionUpdated(response.data['revision']);
   }
 
   Future<List<Note>> loadNotes() async {
@@ -34,6 +36,7 @@ class NotesApi {
           'accept': 'application/json',
           'X-Last-Known-Revision': box.get('remote')
         }));
+    NoteEventLogger().remoteNoteAdded(note);
     updateRevision(response);
   }
 
@@ -44,6 +47,7 @@ class NotesApi {
           'accept': 'application/json',
           'X-Last-Known-Revision': box.get('remote')
         }));
+    NoteEventLogger().remoteNoteDeleted(note);
     updateRevision(response);
   }
 
@@ -55,6 +59,7 @@ class NotesApi {
           'accept': 'application/json',
           'X-Last-Known-Revision': box.get('remote')
         }));
+    NoteEventLogger().remoteNoteEdited(note);
     updateRevision(response);
   }
 
@@ -66,5 +71,6 @@ class NotesApi {
           'accept': 'application/json',
           'X-Last-Known-Revision': box.get('remote')
         }));
+    NoteEventLogger().remoteNotesListPatched();
   }
 }

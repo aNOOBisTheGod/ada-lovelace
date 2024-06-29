@@ -1,4 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:simplenotes/core/logger/note_event_logger.dart';
 import 'package:simplenotes/src/domain/models/note.dart';
 
 class NotesLocalStorage {
@@ -8,6 +9,7 @@ class NotesLocalStorage {
   void incrementRevision() {
     int revision = revisionBox.get('local') ?? 0;
     revisionBox.put('local', revision + 1);
+    NoteEventLogger().localRevisionUpdated(revision + 1);
   }
 
   List<Note> loadNotes() {

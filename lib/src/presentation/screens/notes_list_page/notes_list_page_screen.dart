@@ -81,28 +81,34 @@ class _Content extends StatelessWidget {
                                       height: 5,
                                     ),
                                     NotesListWidget(notesList: notesList),
-                                    TextField(
-                                      controller: addNoteTitleController,
-                                      decoration: InputDecoration(
-                                          hintText:
-                                              AppLocalizations.of(context)!
-                                                  .createNew,
-                                          border: InputBorder.none,
-                                          suffixIcon: IconButton(
-                                              onPressed: () async {
-                                                String id =
-                                                    await GetDeviceId().getId();
-                                                noteListPageBloc.add(AddNote(
-                                                    Note.fromText(
-                                                        addNoteTitleController
-                                                            .text,
-                                                        id)));
-                                                FocusScope.of(context)
-                                                    .requestFocus(FocusNode());
-                                                addNoteTitleController.text =
-                                                    '';
-                                              },
-                                              icon: const Icon(Icons.add))),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: TextField(
+                                        controller: addNoteTitleController,
+                                        decoration: InputDecoration(
+                                            hintText:
+                                                AppLocalizations.of(context)!
+                                                    .createNew,
+                                            enabledBorder: InputBorder.none,
+                                            border: InputBorder.none,
+                                            suffixIcon: IconButton(
+                                                onPressed: () async {
+                                                  String id =
+                                                      await GetDeviceId()
+                                                          .getId();
+                                                  noteListPageBloc.add(AddNote(
+                                                      Note.fromText(
+                                                          addNoteTitleController
+                                                              .text,
+                                                          id)));
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                          FocusNode());
+                                                  addNoteTitleController.text =
+                                                      '';
+                                                },
+                                                icon: const Icon(Icons.add))),
+                                      ),
                                     ),
                                     const SizedBox(
                                       height: 5,

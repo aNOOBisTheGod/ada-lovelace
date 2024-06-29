@@ -1,4 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:simplenotes/core/logger/note_event_logger.dart';
 import 'package:simplenotes/src/data/source/local/notes_local_storage.dart';
 import 'package:simplenotes/src/data/source/remote/notes_api.dart';
 import 'package:simplenotes/src/domain/models/note.dart';
@@ -17,8 +18,10 @@ class NoteRepositoryImpl implements NoteRepository {
     try {
       final data = await NotesApi().loadNotes();
       NotesLocalStorage().saveNotes(data);
+      NoteEventLogger().remoteNotesListLoaded();
       return data;
     } catch (e) {
+      NoteEventLogger().localNotesListLoaded();
       return NotesLocalStorage().loadNotes();
     }
   }

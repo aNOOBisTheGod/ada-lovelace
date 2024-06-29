@@ -18,11 +18,9 @@ void main() async {
     int firstresult = data.length;
     Note note =
         Note.fromText(Random().nextInt(pow(2, 32).toInt()).toString(), id);
-    print(note.toJson());
     await NotesApi().addNote(note);
     data = await NotesApi().loadNotes();
     int secondResult = data.length;
-    print(data);
     expect(secondResult - firstresult, 1);
   });
 }
